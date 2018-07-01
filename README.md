@@ -23,6 +23,11 @@ with simpleflock.SimpleFlock("/tmp/foolock"):
 with simpleflock.SimpleFlock("/tmp/foolock", timeout = 3):
    # Do something.
    pass
+
+# Time to sleep between attempts to acquire the lock (0.1 by default)
+with simpleflock.SimpleFlock("/tmp/foolock", refresh_interval = 0.01):
+   # Do something.
+   pass
 ```
 
 BUGS

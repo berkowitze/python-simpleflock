@@ -7,10 +7,11 @@ import errno
 class SimpleFlock:
    """Provides the simplest possible interface to flock-based file locking. Intended for use with the `with` syntax. It will create/truncate/delete the lock file as necessary."""
 
-   def __init__(self, path, timeout = None):
+   def __init__(self, path, timeout = None, refresh_interval = 0.1):
       self._path = path
       self._timeout = timeout
       self._fd = None
+      self._ri = refresh_interval
 
    def __enter__(self):
       self._fd = os.open(self._path, os.O_CREAT)
@@ -29,7 +30,7 @@ class SimpleFlock:
          
          # TODO It would be nice to avoid an arbitrary sleep here, but spinning
          # without a delay is also undesirable.
-         time.sleep(0.1)
+         time.sleep(self._ri)
 
    def __exit__(self, *args):
       fcntl.flock(self._fd, fcntl.LOCK_UN)
